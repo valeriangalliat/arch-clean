@@ -1,0 +1,39 @@
+#!/bin/sh -e
+
+# Get `base` and `base-devel` packages list
+pacman -Qgq base base-devel | sort > bd
+
+# Get explicitely installed packages
+pacman -Qeq | sort > my
+
+# Get explicitely installed packages not in `base` nor `base-devel`
+comm -23 my bd > rm
+
+# Remove keep list
+[ -f kp ] && sort kp | comm -23 rm - | sponge rm
+
+# Not empty
+if ! printf '' | diff rm - > /dev/null; then
+    # Backup remove files for diff
+    cp rm rmm
+
+    # Filter manually (leave packages to remove in the file)
+    "${EDITOR:-vi}" rm
+
+    # Add spared packages to keep list
+    sort rm | comm -23 rmm - >> kp
+    sort -u kp | sponge kp
+
+    # Delete unneeded packages if any
+    if ! printf '' | diff rm - > /dev/null && ! pacman -Rns - < rm; then
+        echo 'If there'\''s a dependency problem, you can try to mark some packages as dependencies:'
+        echo
+        echo '    pacman -D --asdeps <targets>'
+        exit 1
+    fi
+fi
+
+# Remove unused dependencies
+if pacman -Qtdq > un; then
+    pacman -Rns - < un
+fi
