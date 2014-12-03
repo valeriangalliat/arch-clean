@@ -22,6 +22,11 @@ recursively (with their dependencies).
 
 At the end, all orphan packages are also removed.
 
+Dependencies
+------------
+
+* `moreutils` (for `sponge`)
+
 Installation
 ------------
 
