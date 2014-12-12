@@ -1,10 +1,10 @@
-Arch Clean
+arch-clean
 ==========
 
 > Clean packages on an Arch Linux system.
 
-Overview
---------
+Description
+-----------
 
 This little script will help you remove unneeded packages from your
 Arch Linux installation.
@@ -25,7 +25,7 @@ At the end, all orphan packages are also removed.
 Dependencies
 ------------
 
-* `moreutils` (for `sponge`)
+* moreutils (for `sponge`)
 
 Installation
 ------------
